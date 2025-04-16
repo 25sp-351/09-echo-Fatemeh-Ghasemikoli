@@ -1,27 +1,27 @@
-# Makefile for TCP Echo Server
+# Makefile for TCP/HTTP Echo Server in C
 
-CXX = g++
-CXXFLAGS = -Wall -std=c++11
+CC = gcc
+CFLAGS = -Wall -std=c11
 TARGET = echo
 OBJS = main.o server.o client_handler.o
 
 all: format $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) -lpthread
 
-main.o: main.cpp server.h
-	$(CXX) $(CXXFLAGS) -c main.cpp
+main.o: main.c server.h
+	$(CC) $(CFLAGS) -c main.c
 
-server.o: server.cpp server.h
-	$(CXX) $(CXXFLAGS) -c server.cpp
+server.o: server.c server.h client_handler.h
+	$(CC) $(CFLAGS) -c server.c
 
-client_handler.o: client_handler.cpp client_handler.h
-	$(CXX) $(CXXFLAGS) -c client_handler.cpp
-	
+client_handler.o: client_handler.c client_handler.h
+	$(CC) $(CFLAGS) -c client_handler.c
+
 clean:
 	rm -f $(TARGET) $(OBJS)
 
 format:
-	@echo "Formatting source files with clang-format..."
-	clang-format -i *.cpp *.h
+	@echo "Formatting C source files with clang-format..."
+	clang-format -i *.c *.h
